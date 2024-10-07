@@ -1,23 +1,21 @@
 import { mailtrapClient, sender } from '../lib/mailtrap.js';
-import { createWelcomeEmailTemplate } from './emailTemplates.js';
+import {
+	createCommentNotificationEmailTemplate,
+	createConnectionAcceptedEmailTemplate,
+	createWelcomeEmailTemplate,
+} from './emailTemplates.js';
 
 export const sendWelcomeEmail = async (email, name, profileUrl) => {
 	const recipient = [{ email }];
+	const response = await mailtrapClient.send({
+		from: sender,
+		to: recipient,
+		subject: 'Welcome to UnLinked',
+		html: createWelcomeEmailTemplate(name, profileUrl),
+		category: 'welcome',
+	});
 
-	try {
-		const response = await mailtrapClient.send({
-			from: sender,
-			to: recipient,
-			subject: 'Welcome to UnLinked',
-			html: createWelcomeEmailTemplate(name, profileUrl),
-			category: 'welcome',
-		});
-
-		console.log('Welcome Email sent successfully', response);
-	} catch (error) {
-		// biome-ignore lint/complexity/noUselessCatch: <explanation>
-		throw error;
-	}
+	console.log('Welcome Email sent succesffully', response);
 };
 
 export const sendCommentNotificationEmail = async (
@@ -28,23 +26,40 @@ export const sendCommentNotificationEmail = async (
 	commentContent,
 ) => {
 	const recipient = [{ email: recipientEmail }];
+	const response = await mailtrapClient.send({
+		from: sender,
+		to: recipient,
+		subject: 'New Comment on Your Post',
+		html: createCommentNotificationEmailTemplate(
+			recipientName,
+			commenterName,
+			postUrl,
+			commentContent,
+		),
+		category: 'comment_notification',
+	});
+	console.log('Comment Notification Email sent successfully', response);
+};
+
+export const sendConnectionAcceptedEmail = async (
+	senderEmail,
+	senderName,
+	recipientName,
+	profileUrl,
+) => {
+	const recipient = [{ email: senderEmail }];
 
 	try {
 		const response = await mailtrapClient.send({
 			from: sender,
 			to: recipient,
-			subject: 'New Comment on Your Post',
-			html: createCommentNotificationEmailTemplate(
+			subject: `${recipientName} accepted your connection request`,
+			html: createConnectionAcceptedEmailTemplate(
+				senderName,
 				recipientName,
-				commenterName,
-				postUrl,
-				commentContent,
+				profileUrl,
 			),
-			category: 'comment_notification',
+			category: 'connection_accepted',
 		});
-		console.log('Comment Notification Email sent successfully', response);
-	} catch (error) {
-		// biome-ignore lint/complexity/noUselessCatch: <explanation>
-		throw error;
-	}
+	} catch (error) {}
 };

@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 4000; // 4000
 app.use(
 	cors({
 		origin: 'http://localhost:5173',
-		credintials: true,
+		credentials: true,
 	}),
 );
 app.use(express.json({ limit: '5mb' })); // parser JSON request bodies

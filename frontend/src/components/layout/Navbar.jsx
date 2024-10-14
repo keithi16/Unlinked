@@ -4,10 +4,7 @@ import { Link } from 'react-router-dom';
 import { Bell, Home, LogOut, User, Users } from 'lucide-react';
 
 const Navbar = () => {
-	const { data: authUser } = useQuery({
-		queryKey: ['authUser'],
-	});
-
+	const { data: authUser } = useQuery({ queryKey: ['authUser'] });
 	const queryClient = useQueryClient();
 
 	const { data: notifications } = useQuery({
@@ -31,9 +28,8 @@ const Navbar = () => {
 
 	const unreadNotificationCount = notifications?.data.filter(
 		(notif) => !notif.read,
-	).lenght;
-
-	const unreadConnectionRequestsCount = connectionRequests?.data?.lenght;
+	).length;
+	const unreadConnectionRequestsCount = connectionRequests?.data?.length;
 
 	return (
 		<nav className="sticky top-0 z-10 shadow-md bg-secondary">
@@ -90,8 +86,8 @@ const Navbar = () => {
 									<span className="hidden text-xs md:block">Me</span>
 								</Link>
 								<button
-									className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800"
 									type="button"
+									className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800"
 									onClick={() => logout()}
 								>
 									<LogOut size={20} />
@@ -114,5 +110,4 @@ const Navbar = () => {
 		</nav>
 	);
 };
-
 export default Navbar;
